@@ -4,7 +4,6 @@ import * as Yup from "yup";
 
 import CelulaView from "../views/celula_views";
 import Celula from "../models/Celula";
-import { equal } from "assert";
 
 export default {
   async index(request: Request, response: Response) {
@@ -25,8 +24,6 @@ export default {
       where: [{ scheduled_to: date.replace(re, "/") }],
     });
 
-    console.log(celula);
-
     return response.json(CelulaView.renderMany(celula));
   },
 
@@ -41,7 +38,7 @@ export default {
   },
 
   async create(request: Request, response: Response) {
-    const { name } = request.body;
+    const { name, date } = request.body;
 
     const timestamp = Date.now();
     const selectedDate = new Date(timestamp);
@@ -69,6 +66,14 @@ export default {
     });
 
     await schema.validate(data, { abortEarly: false });
+
+    const availability = await celulaRepository.find({
+      where: [{ scheduled_to: date }],
+    });
+
+    if (availability.length >= 15) {
+      return response.status(400).json({ message: "Evento lotado" });
+    }
 
     const celula = celulaRepository.create(data);
 
