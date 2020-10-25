@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 
@@ -14,4 +15,4 @@ app.use(express.json());
 app.use(routes);
 app.use(errorHandler);
 
-app.listen(3003);
+app.listen(process.env.PORT || 3003);
