@@ -9,47 +9,32 @@ export default {
   async create(request: Request, response: Response) {
     const { date } = request.body;
 
-    const { action } = request.params;
-
     const galeriaDateRepository = getRepository(GaleriaDate);
 
-    if (action === "create") {
-      // Create a new date entry in the database
+    const existingGaleriaDates = await galeriaDateRepository.find();
 
-      const data = { date: date, selected: false };
+    const availableDates = existingGaleriaDates.map((date) => {
+      return { id: date.id, date: date.date, selected: false };
+    });
 
-      const schema = Yup.object().shape({
-        date: Yup.string().required(),
-        selected: Yup.boolean().required(),
-      });
+    await galeriaDateRepository.save(availableDates);
 
-      await schema.validate(data, { abortEarly: false });
-
-      const galeriaDate = galeriaDateRepository.create(data);
-
-      await galeriaDateRepository.save(galeriaDate);
-
-      return response.status(201).json(GaleriaDateView.render(galeriaDate));
-    } else if (action === "set") {
-      // Set a new data as the selected date in the database
-
-      const existingGaleriaDates = await galeriaDateRepository.find();
-
-      const availableDates = existingGaleriaDates.map((date) => {
-        return { id: date.id, date: date.date, selected: false };
-      });
-
-      await galeriaDateRepository.save(availableDates);
-
-      let setGaleriaDate = await galeriaDateRepository.findOneOrFail({
+    let setGaleriaDate: GaleriaDate = await galeriaDateRepository
+      .findOneOrFail({
         where: [{ date: date }],
+      })
+      .catch(async () => {
+        const data = { date: date, selected: true };
+        const dateInput = galeriaDateRepository.create(data);
+
+        await galeriaDateRepository.save(dateInput);
+        return dateInput;
       });
 
-      setGaleriaDate.selected = true;
+    setGaleriaDate.selected = true;
 
-      await galeriaDateRepository.save(setGaleriaDate);
+    await galeriaDateRepository.save(setGaleriaDate);
 
-      return response.status(200).json(GaleriaDateView.render(setGaleriaDate));
-    }
+    return response.status(200).json(GaleriaDateView.render(setGaleriaDate));
   },
 };

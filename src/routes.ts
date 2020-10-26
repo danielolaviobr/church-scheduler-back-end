@@ -12,6 +12,6 @@ routes.delete("/celula/:id", CelulaController.delete);
 
 routes.get("/date/:type", DateController.show);
 
-routes.post("/galeria_date/:action", GaleriaDateController.create);
+routes.post("/galeria_date", GaleriaDateController.create);
 
 export default routes;
