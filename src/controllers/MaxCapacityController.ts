@@ -28,7 +28,7 @@ export default {
 
     const maxCapacityRepository = getRepository(MaxCapacity);
 
-    const data = maxCapacityRepository.findOneOrFail({
+    const data = await maxCapacityRepository.findOneOrFail({
       where: [{ event: event }],
     });
 
