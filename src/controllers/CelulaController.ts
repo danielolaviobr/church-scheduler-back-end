@@ -4,6 +4,7 @@ import * as Yup from "yup";
 
 import CelulaView from "../views/celula_views";
 import Celula from "../models/Celula";
+import MaxCapacity from "../models/MaxCapacity";
 
 export default {
   async index(request: Request, response: Response) {
@@ -71,8 +72,14 @@ export default {
       where: [{ scheduled_to: date }],
     });
 
-    if (availability.length >= 15) {
-      return response.status(400).json({ message: "Evento lotado" });
+    const maxCapacityRepository = getRepository(MaxCapacity);
+
+    const { max_capacity } = await maxCapacityRepository.findOneOrFail({
+      where: [{ event: "galeria" }],
+    });
+
+    if (availability.length >= max_capacity) {
+      return response.status(400).json({ message: "Maximum capacity reached" });
     }
 
     const celula = celulaRepository.create(data);

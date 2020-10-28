@@ -5,6 +5,7 @@ import * as Yup from "yup";
 
 import GaleriaView from "../views/galeria_views";
 import Galeria from "../models/Galeria";
+import MaxCapacity from "../models/MaxCapacity";
 
 export default {
   async show(request: Request, response: Response) {
@@ -25,10 +26,24 @@ export default {
 
     const galeriaRepository = getRepository(Galeria);
 
+    const availability = await galeriaRepository.find({
+      where: [{ scheduled_to: date }],
+    });
+
+    const maxCapacityRepository = getRepository(MaxCapacity);
+
+    const { max_capacity } = await maxCapacityRepository.findOneOrFail({
+      where: [{ event: "galeria" }],
+    });
+
+    if (availability.length >= max_capacity) {
+      return response.status(400).json({ message: "Maximum capacity reached" });
+    }
+
     const data = { name, scheduled_to: date };
 
     const schema = Yup.object().shape({
-      name: Yup.string().required("Nome é um campo obrigatório").max(60),
+      name: Yup.string().required("Name is a mandatory field").max(60),
       scheduled_to: Yup.string().required(),
     });
 
