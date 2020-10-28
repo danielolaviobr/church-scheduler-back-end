@@ -28,6 +28,6 @@ export class createGaleria1603699952188 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("galeria");
+    await queryRunner.dropTable("galria");
   }
 }
