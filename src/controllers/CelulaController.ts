@@ -79,6 +79,6 @@ export default {
 
     await celulaRepository.save(celula);
 
-    return response.status(201).json(celula);
+    return response.status(201).json(CelulaView.render(celula));
   },
 };

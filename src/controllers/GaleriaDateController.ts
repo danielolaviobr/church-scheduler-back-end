@@ -37,4 +37,13 @@ export default {
 
     return response.status(200).json(GaleriaDateView.render(setGaleriaDate));
   },
+  async show(request: Request, response: Response) {
+    const galeriaDateRepository = getRepository(GaleriaDate);
+
+    const galeria = await galeriaDateRepository.findOneOrFail({
+      where: [{ selected: true }],
+    });
+
+    return response.status(200).json(GaleriaDateView.render(galeria));
+  },
 };
