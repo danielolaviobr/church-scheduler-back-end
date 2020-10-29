@@ -37,7 +37,7 @@ export default {
     });
 
     if (availability.length >= max_capacity) {
-      return response.status(400).json({ message: "Maximum capacity reached" });
+      return response.status(406).json({ message: "Maximum capacity reached" });
     }
 
     const data = { name, scheduled_to: date };
