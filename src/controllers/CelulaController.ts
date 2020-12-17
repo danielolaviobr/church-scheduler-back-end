@@ -53,9 +53,12 @@ export default {
         selectedDate.getDate() + (4 - selectedDate.getDay())
       );
     }
-    const scheduled_to = `${selectedDate.getDate()}/${
-      selectedDate.getMonth() + 1
-    }/${selectedDate.getFullYear()}`;
+    // const scheduled_to = `${selectedDate.getDate()}/${
+    //   selectedDate.getMonth() + 1
+    // }/${selectedDate.getFullYear()}`;
+
+    // ! Temp change - remove after this date
+    const scheduled_to = "23/12/2020";
 
     const celulaRepository = getRepository(Celula);
 

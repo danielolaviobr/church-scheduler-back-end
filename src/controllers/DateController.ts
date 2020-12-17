@@ -18,9 +18,13 @@ export default {
           selectedDate.getDate() + (4 - selectedDate.getDay())
         );
       }
-      const nextCelula = `${selectedDate.getDate()}/${
-        selectedDate.getMonth() + 1
-      }/${selectedDate.getFullYear()}`;
+      // const nextCelula = `${selectedDate.getDate()}/${
+      //   selectedDate.getMonth() + 1
+      // }/${selectedDate.getFullYear()}`;
+
+      // ! Temp change - remove after date
+      const nextCelula = "23/12/2020";
+
       return response.status(200).json({ date: nextCelula });
     } else if (type === "galeria") {
       const galeriaRepository = getRepository(Galeria);
