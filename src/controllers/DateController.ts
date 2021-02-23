@@ -18,6 +18,7 @@ export default {
           selectedDate.getDate() + (4 - selectedDate.getDay())
         );
       }
+
       const nextCelula = `${selectedDate.getDate()}/${
         selectedDate.getMonth() + 1
       }/${selectedDate.getFullYear()}`;
